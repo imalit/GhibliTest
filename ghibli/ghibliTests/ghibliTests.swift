@@ -105,10 +105,10 @@ class MockService: ServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    private func getMoviesFromText() -> [GhibliElement]? {
+    private func getMoviesFromText() -> Ghibli? {
         do {
             let jsonData = Data(text.utf8)
-            let movies = try JSONDecoder().decode([GhibliElement].self, from: jsonData)
+            let movies = try JSONDecoder().decode(Ghibli.self, from: jsonData)
             return movies
         } catch {
             return nil

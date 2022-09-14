@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 class GhibliListViewModel: ObservableObject {
-    @Published var movies = [GhibliElement]()
+    @Published var movies = Ghibli()
     private var ghibliCancellable: AnyCancellable?
     private var service: ServiceProtocol?
     private var urlString = ""
@@ -24,7 +24,7 @@ class GhibliListViewModel: ObservableObject {
         self.ghibliCancellable = service?.fetchMovies(
             urlString: urlString
         ).sink(
-            receiveCompletion: { _ in }, receiveValue: { (ghibliMovies: [GhibliElement]) in
+            receiveCompletion: { _ in }, receiveValue: { (ghibliMovies: Ghibli) in
                 self.movies = ghibliMovies
             }
         )
