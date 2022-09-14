@@ -1,37 +1,40 @@
 import UIKit
 import Combine
 
-struct GhibliElement: Codable {
-    let id, title, originalTitle, originalTitleRomanised: String
-    let image, movieBanner: String
-    let ghibliDescription, director, producer, releaseDate: String
-    let runningTime, rtScore: String
-    let people, species, locations, vehicles: [String]
-    let url: String
+//struct AnimalIterator: IteratorProtocol {
+//    typealias Element = Animal
+//    let animals: Animal
+//    var current: Int
+//
+//    init(_ current: Int) {
+//        current = current
+//    }
+//
+//    mutating func next() -> Animal? {
+//        animalList.
+//    }
+//}
 
-    enum CodingKeys: String, CodingKey {
-        case id, title
-        case originalTitle = "original_title"
-        case originalTitleRomanised = "original_title_romanised"
-        case image
-        case movieBanner = "movie_banner"
-        case ghibliDescription = "description"
-        case director, producer
-        case releaseDate = "release_date"
-        case runningTime = "running_time"
-        case rtScore = "rt_score"
-        case people, species, locations, vehicles, url
-    }
+struct Animal {
+    let name: String
 }
 
-guard let url = URL(string: "https://ghibliapi.herokuapp.com/films") else {
-    fatalError("Invalid URL")
-}
+//extension Animal: Sequence {
+//    typealias Element = Animal
+//
+//    func makeIterator() -> AnimalIterator {
+//        return AnimalIterator(start)
+//    }
+//}
 
-let publisher = URLSession.shared.dataTaskPublisher(for: url)
-    .print()
-    .map(\.data)
-    .decode(type: [GhibliElement].self, decoder: JSONDecoder())
-    .sink(receiveCompletion: { _ in }, receiveValue: {
-        print($0)
-    })
+let animalDog = Animal(name: "Dog")
+let animalCat = Animal(name: "Cat")
+
+let totalList = [animalDog, animalCat]
+print(totalList[0])
+
+var limitedList : [Animal] = []
+limitedList.insert(totalList[0], at: 0)
+//limitedList[0] = totalList[0]
+print(limitedList[0])
+
