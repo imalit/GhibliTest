@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 class GhibliListViewModel: ObservableObject {
-    @Published var movies = [GhibliViewModel]()
+    @Published var movies = [GhibliElement]()
     private var ghibliCancellable: AnyCancellable?
     private var service: ServiceProtocol?
     private var urlString = ""
@@ -23,33 +23,10 @@ class GhibliListViewModel: ObservableObject {
     func getData() {
         self.ghibliCancellable = service?.fetchMovies(
             urlString: urlString
-        ).map { (movies: [GhibliElement]) in
-            movies.map {
-                GhibliViewModel(ghibliMovie: $0)
+        ).sink(
+            receiveCompletion: { _ in }, receiveValue: { (ghibliMovies: [GhibliElement]) in
+                self.movies = ghibliMovies
             }
-        }.sink(receiveCompletion: { _ in }, receiveValue: { ghibliViewModels in
-            print(ghibliViewModels)
-            self.movies = ghibliViewModels
-        })
-    }
-}
-
-struct GhibliViewModel {
-    let ghibliMovie: GhibliElement
-    
-    var id: String {
-        return self.ghibliMovie.id
-    }
-    
-    var title: String {
-        return self.ghibliMovie.title
-    }
-    
-    var description: String {
-        return self.ghibliMovie.ghibliDescription
-    }
-    
-    var image: URL? {
-        return URL(string: self.ghibliMovie.image)
+        )
     }
 }

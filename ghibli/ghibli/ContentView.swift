@@ -31,7 +31,7 @@ struct ContentView: View {
                             .padding()
                         
                         AsyncImage(
-                            url: movie.image,
+                            url: URL(string: movie.image),
                             content: { image in
                                 image.resizable()
                             }, placeholder: {
@@ -42,7 +42,7 @@ struct ContentView: View {
                             .frame(width: 150, height: 150, alignment: .trailing)
                     }
 
-                    Text("\(movie.description)")
+                    Text("\(movie.ghibliDescription)")
                         .lineLimit(nil)
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
