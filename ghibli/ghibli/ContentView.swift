@@ -24,7 +24,7 @@ struct ContentView: View {
             Text("Title Here")
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .center)
-            ForEach(self.viewModel.movies, id: \.id) { movie in
+            ForEach(self.viewModel.scrollableMovies, id: \.id) { movie in
                 VStack {
                     HStack {
                         Text("\(movie.title)")
@@ -47,6 +47,14 @@ struct ContentView: View {
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             }
+            
+            Text("Fetching more...")
+                .onAppear(perform: {
+                    if self.viewModel.hasMoreItems() {
+                        self.viewModel.fetchMore()
+                    }
+                }
+            )
         }
     }
 }
