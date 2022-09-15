@@ -39,7 +39,7 @@ class GhibliListViewModel: ObservableObject {
         if !movies.isEmpty {
             let max = self.currentPage * self.movieLimitPerPage
             for index in self.min...max where max < movies.count {
-                self.scrollableMovies.insert(self.movies[index], at: index)
+                self.scrollableMovies.append(self.movies[index])
             }
             self.min = max + 1
         }

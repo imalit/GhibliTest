@@ -18,23 +18,11 @@ import Combine
 struct Animal {
     let name: String
 }
+let totalList = [Animal(name: "Cat"), Animal(name: "Dog")]
+var list = [Animal]()
+for index in 0..<totalList.count {
+    list.append(totalList[index])
+}
 
-//extension Animal: Sequence {
-//    typealias Element = Animal
-//
-//    func makeIterator() -> AnimalIterator {
-//        return AnimalIterator(start)
-//    }
-//}
-
-let animalDog = Animal(name: "Dog")
-let animalCat = Animal(name: "Cat")
-
-let totalList = [animalDog, animalCat]
-print(totalList[0])
-
-var limitedList : [Animal] = []
-limitedList.insert(totalList[0], at: 0)
-//limitedList[0] = totalList[0]
-print(limitedList[0])
+print(list)
 
