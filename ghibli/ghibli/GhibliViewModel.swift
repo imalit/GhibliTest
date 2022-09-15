@@ -10,21 +10,19 @@ import Combine
 import SwiftUI
 
 class GhibliListViewModel: ObservableObject {
-    @Published var scrollableMovies: Ghibli = []
-    private var movies = Ghibli()
-    private var movieLimitPerPage = 3
+    @Published var scrollableMovies = Ghibli()
+    var movies = Ghibli()
+    var movieLimitPerPage = 3
     private var currentPage = 1
     private var min = 0
     private var ghibliCancellable: AnyCancellable?
     private var service: ServiceProtocol?
-    private var urlString = ""
     
-    init(urlString: String, service: ServiceProtocol) {
-        self.urlString = urlString
+    init(service: ServiceProtocol) {
         self.service = service
     }
     
-    func getData() {
+    func getData(urlString: String) {
         self.ghibliCancellable = service?.fetchMovies(
             urlString: urlString
         ).sink(
@@ -37,11 +35,17 @@ class GhibliListViewModel: ObservableObject {
     
     func fetchMore() {
         if !movies.isEmpty {
-            let max = self.currentPage * self.movieLimitPerPage
-            for index in self.min...max where max < movies.count {
-                self.scrollableMovies.append(self.movies[index])
+            let max = currentPage * movieLimitPerPage
+            if movies.count <= movieLimitPerPage || (max > movies.count && min < max) {
+                for index in min..<movies.count {
+                    scrollableMovies.append(self.movies[index])
+                }
+            } else {
+                for index in min..<max where max <= movies.count {
+                    scrollableMovies.append(self.movies[index])
+                }
             }
-            self.min = max + 1
+            min = max
         }
     }
     

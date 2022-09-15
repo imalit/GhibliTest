@@ -11,12 +11,11 @@ import Combine
 struct ContentView: View {
     
     @ObservedObject private var viewModel = GhibliListViewModel(
-        urlString: "https://ghibliapi.herokuapp.com/films",
         service: Service()
     )
     
     init() {
-        viewModel.getData()
+        viewModel.getData(urlString: "https://ghibliapi.herokuapp.com/films")
     }
     
     var body: some View {
@@ -24,10 +23,13 @@ struct ContentView: View {
             Text("Title Here")
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .center)
-            ForEach(self.viewModel.scrollableMovies, id: \.id) { movie in
+            ForEach(0..<self.viewModel.scrollableMovies.count, id: \.self) { index in
+                let movie = self.viewModel.scrollableMovies[index]
+                
                 VStack {
                     HStack {
-                        Text("\(movie.title)")
+                        
+                        Text("\(index+1) \(movie.title)")
                             .padding()
                         
                         AsyncImage(
