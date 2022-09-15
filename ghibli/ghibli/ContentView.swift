@@ -48,12 +48,13 @@ struct ContentView: View {
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             }
             
-            if self.viewModel.hasMoreItems() {
-                Text("Fetching more...")
-//                        .onAppear(perform: {
-//                            self.viewModelMyList.fetchMore()
-//                        })
-            }
+            Text("Fetching more...")
+                .onAppear(perform: {
+                    if self.viewModel.hasMoreItems() {
+                        self.viewModel.fetchMore()
+                    }
+                }
+            )
         }
     }
 }

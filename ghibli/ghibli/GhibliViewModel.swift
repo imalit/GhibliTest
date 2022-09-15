@@ -10,8 +10,8 @@ import Combine
 import SwiftUI
 
 class GhibliListViewModel: ObservableObject {
-    @Published var movies = Ghibli()
     @Published var scrollableMovies: Ghibli = []
+    private var movies = Ghibli()
     private var movieLimitPerPage = 3
     private var currentPage = 1
     private var min = 0
@@ -30,18 +30,25 @@ class GhibliListViewModel: ObservableObject {
         ).sink(
             receiveCompletion: { _ in }, receiveValue: { (ghibliMovies: Ghibli) in
                 self.movies = ghibliMovies
-                
-                let max = self.currentPage * self.movieLimitPerPage
-                for index in self.min..<max {
-                    self.scrollableMovies.insert(self.movies[index], at: index)
-                }
-                self.min = max - 1
+                self.fetchMore()
             }
         )
     }
     
+    func fetchMore() {
+        if !movies.isEmpty {
+            let max = self.currentPage * self.movieLimitPerPage
+            for index in self.min...max where max < movies.count {
+                self.scrollableMovies.insert(self.movies[index], at: index)
+            }
+            self.min = max + 1
+        }
+    }
+    
     func hasMoreItems() -> Bool {
-        let totalMovies = movies.count
-        return min >= totalMovies
+        if !self.scrollableMovies.isEmpty {
+            self.currentPage += 1
+        }
+        return min <= movies.count
     }
 }
