@@ -20,8 +20,8 @@ enum ViewState {
 class GhibliListViewModel: ObservableObject {
     @Published var scrollableMovies = [PersonalizedMovie]()
     var viewState = ViewState.all
-    private var personalizedMovies = [PersonalizedMovie]()
-    private let movieLimitPerPage = 3
+    var personalizedMovies = [PersonalizedMovie]()
+    let movieLimitPerPage = 3
     private var currentPage = 1
     private var min = 0
     private var ghibliCancellable: AnyCancellable?

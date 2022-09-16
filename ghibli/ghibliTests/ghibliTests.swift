@@ -16,7 +16,7 @@ class ghibliViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
         listViewModel = GhibliListViewModel(
-            service: service
+            service: service, state: .all
        )
     }
 
@@ -26,29 +26,29 @@ class ghibliViewModelTests: XCTestCase {
 
     func testGetData() throws {
         listViewModel?.getData(urlString: service.responseShort)
-        XCTAssert(listViewModel?.movies.count == 2)
+        XCTAssert(listViewModel?.personalizedMovies.count == 2)
     }
     
-//    func testFetchMore_Short() throws {
-//        listViewModel?.movies = service.getMoviesFromText(response: service.responseShort) ?? []
-//        listViewModel?.fetchMore()
-//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movies.count)
-//        XCTAssert(listViewModel?.movies.count ?? 0 < listViewModel?.movieLimitPerPage ?? 0)
-//    }
-//    
-//    func testFetchMore_Equal() throws {
-//        listViewModel?.movies = service.getMoviesFromText(response: service.responseEqual) ?? []
-//        listViewModel?.fetchMore()
-//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
-//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movies.count)
-//    }
-//    
-//    func testFetchMore_More() throws {
-//        listViewModel?.movies = service.getMoviesFromText(response: service.responseMore) ?? []
-//        listViewModel?.fetchMore()
-//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
-//        XCTAssert(listViewModel?.movies.count ?? 0 > listViewModel?.movieLimitPerPage ?? 0)
-//    }
+    func testFetchMore_Short() throws {
+        listViewModel?.personalizedMovies = service.getMoviesFromText(response: service.responseShort) ?? []
+        listViewModel?.fetchMore()
+        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.personalizedMovies.count)
+        XCTAssert(listViewModel?.personalizedMovies.count ?? 0 < listViewModel?.movieLimitPerPage ?? 0)
+    }
+    
+    func testFetchMore_Equal() throws {
+        listViewModel?.personalizedMovies = service.getMoviesFromText(response: service.responseEqual) ?? []
+        listViewModel?.fetchMore()
+        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
+        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.personalizedMovies.count)
+    }
+    
+    func testFetchMore_More() throws {
+        listViewModel?.personalizedMovies = service.getMoviesFromText(response: service.responseMore) ?? []
+        listViewModel?.fetchMore()
+        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
+        XCTAssert(listViewModel?.personalizedMovies.count ?? 0 > listViewModel?.movieLimitPerPage ?? 0)
+    }
 }
 
 class MockService: ServiceProtocol {
@@ -335,17 +335,35 @@ class MockService: ServiceProtocol {
     """
     
     func fetchMovies<T: Decodable>(urlString: String) -> AnyPublisher<T, Error> {
-        let response = getMoviesFromText(response: urlString)
+        let response = getGhibliMoviesFromText(response: urlString)
         return Just(response as! T)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
     
-    func getMoviesFromText(response: String) -> Ghibli? {
+    func getGhibliMoviesFromText(response: String) -> Ghibli? {
         do {
             let jsonData = Data(response.utf8)
             let movies = try JSONDecoder().decode(Ghibli.self, from: jsonData)
             return movies
+        } catch {
+            return nil
+        }
+    }
+    
+    func getMoviesFromText(response: String) -> [PersonalizedMovie]? {
+        do {
+            let jsonData = Data(response.utf8)
+            let movies = try JSONDecoder().decode(Ghibli.self, from: jsonData)
+            var personalizedMovies = [PersonalizedMovie]()
+            
+            for movie in movies {
+                let personalizedMovie = PersonalizedMovie(ghibliMovie: movie, state: .none)
+                personalizedMovies.append(personalizedMovie)
+            }
+            
+            return personalizedMovies
+            
         } catch {
             return nil
         }
