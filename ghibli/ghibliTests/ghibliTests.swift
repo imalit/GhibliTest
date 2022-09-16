@@ -29,26 +29,26 @@ class ghibliViewModelTests: XCTestCase {
         XCTAssert(listViewModel?.movies.count == 2)
     }
     
-    func testFetchMore_Short() throws {
-        listViewModel?.movies = service.getMoviesFromText(response: service.responseShort) ?? []
-        listViewModel?.fetchMore()
-        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movies.count)
-        XCTAssert(listViewModel?.movies.count ?? 0 < listViewModel?.movieLimitPerPage ?? 0)
-    }
-    
-    func testFetchMore_Equal() throws {
-        listViewModel?.movies = service.getMoviesFromText(response: service.responseEqual) ?? []
-        listViewModel?.fetchMore()
-        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
-        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movies.count)
-    }
-    
-    func testFetchMore_More() throws {
-        listViewModel?.movies = service.getMoviesFromText(response: service.responseMore) ?? []
-        listViewModel?.fetchMore()
-        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
-        XCTAssert(listViewModel?.movies.count ?? 0 > listViewModel?.movieLimitPerPage ?? 0)
-    }
+//    func testFetchMore_Short() throws {
+//        listViewModel?.movies = service.getMoviesFromText(response: service.responseShort) ?? []
+//        listViewModel?.fetchMore()
+//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movies.count)
+//        XCTAssert(listViewModel?.movies.count ?? 0 < listViewModel?.movieLimitPerPage ?? 0)
+//    }
+//    
+//    func testFetchMore_Equal() throws {
+//        listViewModel?.movies = service.getMoviesFromText(response: service.responseEqual) ?? []
+//        listViewModel?.fetchMore()
+//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
+//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movies.count)
+//    }
+//    
+//    func testFetchMore_More() throws {
+//        listViewModel?.movies = service.getMoviesFromText(response: service.responseMore) ?? []
+//        listViewModel?.fetchMore()
+//        XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
+//        XCTAssert(listViewModel?.movies.count ?? 0 > listViewModel?.movieLimitPerPage ?? 0)
+//    }
 }
 
 class MockService: ServiceProtocol {

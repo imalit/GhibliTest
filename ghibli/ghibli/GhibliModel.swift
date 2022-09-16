@@ -39,3 +39,8 @@ struct GhibliElement: Codable {
 }
 
 typealias Ghibli = [GhibliElement]
+
+struct PersonalizedMovie {
+    let ghibliMovie: GhibliElement
+    let state: MovieState
+}

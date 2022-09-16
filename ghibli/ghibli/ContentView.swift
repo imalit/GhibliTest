@@ -11,29 +11,75 @@ import Combine
 struct ContentView: View {
     
     @ObservedObject private var viewModel = GhibliListViewModel(
-        service: Service()
+        service: Service(), state: .all
     )
+    
+    private var viewState = ViewState.all
     
     init() {
         viewModel.getData(urlString: "https://ghibliapi.herokuapp.com/films")
     }
     
     var body: some View {
-        List {
-            Text("Title Here")
-                .font(.title)
-                .frame(maxWidth: .infinity, alignment: .center)
-            ForEach(0..<self.viewModel.scrollableMovies.count, id: \.self) { index in
-                let movie = self.viewModel.scrollableMovies[index]
+        NavigationView {
+            List {
+                Text("Title Here")
+                    .font(.title)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 
+                HStack {
+                    Text("All").onTapGesture {
+                        viewModel.reloadView(state: .all)
+                    }
+                     Text("To Watch").onTapGesture {
+                         viewModel.reloadView(state: .toWatch)
+                     }
+                     Text("Action3").onTapGesture {
+                         print("action 3 tapped")
+                     }
+                }
+                
+                ForEach(0..<self.viewModel.scrollableMovies.count, id: \.self) { index in
+                    let movie = self.viewModel.scrollableMovies[index]
+                    GhibliCellContent(movie: movie, index: index)
+                }
+                
+                if self.viewModel.hasMoreItems() {
+                    Text("Fetching more...")
+                        .onAppear(perform: {
+                            self.viewModel.fetchMore()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+struct GhibliCellContent: View {
+    
+    var movie: PersonalizedMovie?
+    var index: Int = 0
+    
+    init(movie: PersonalizedMovie, index: Int) {
+        self.movie = movie
+        self.index = index
+    }
+    
+    var body: some View {
+        if let movie = movie {
+            let ghibliMovie = movie.ghibliMovie
+            NavigationLink(destination: MovieView(movie: movie)) {
                 VStack {
                     HStack {
-                        
-                        Text("\(index+1) \(movie.title)")
-                            .padding()
-                        
+                        Text("\(ghibliMovie.title)")
+                            .font(.title3)
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity)
+                            
                         AsyncImage(
-                            url: URL(string: movie.image),
+                            url: URL(string: ghibliMovie.image),
                             content: { image in
                                 image.resizable()
                             }, placeholder: {
@@ -41,22 +87,28 @@ struct ContentView: View {
                             }
                         )
                             .scaledToFit()
-                            .frame(width: 150, height: 150, alignment: .trailing)
+                            .cornerRadius(10)
+                            .frame(
+                                width: 150,
+                                height: 150,
+                                alignment: .trailing
+                            )
                     }
-
-                    Text("\(movie.ghibliDescription)")
+                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 20, trailing: 5))
+                    
+                    Text("\(ghibliMovie.ghibliDescription)")
                         .lineLimit(nil)
+                        .font(.body)
                 }
-                .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                    .padding(
+                        EdgeInsets(
+                            top: 10,
+                            leading: 10,
+                            bottom: 10,
+                            trailing: 10
+                        )
+                    )
             }
-            
-            Text("Fetching more...")
-                .onAppear(perform: {
-                    if self.viewModel.hasMoreItems() {
-                        self.viewModel.fetchMore()
-                    }
-                }
-            )
         }
     }
 }
