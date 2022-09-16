@@ -34,7 +34,7 @@ struct ContentView: View {
                      Text("To Watch").onTapGesture {
                          viewModel.reloadView(state: .toWatch)
                      }
-                     Text("Action3").onTapGesture {
+                     Text("Watched").onTapGesture {
                          print("action 3 tapped")
                      }
                 }
