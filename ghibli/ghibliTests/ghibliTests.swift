@@ -49,6 +49,27 @@ class ghibliViewModelTests: XCTestCase {
         XCTAssert(listViewModel?.scrollableMovies.count == listViewModel?.movieLimitPerPage)
         XCTAssert(listViewModel?.personalizedMovies.count ?? 0 > listViewModel?.movieLimitPerPage ?? 0)
     }
+    
+    func testFilter_All() throws {
+        listViewModel?.personalizedMovies = service.getMoviesFromText(response: service.responseMore) ?? []
+        listViewModel?.viewState = .all
+        let filteredMovies = listViewModel?.filterMovies()
+        XCTAssert(filteredMovies?.count == 4)
+    }
+    
+    func testFilter_ToWatch() throws {
+        listViewModel?.personalizedMovies = service.getMoviesFromText(response: service.responseMore) ?? []
+        listViewModel?.viewState = .toWatch
+        let filteredMovies = listViewModel?.filterMovies()
+        XCTAssert(filteredMovies?.count == 2)
+    }
+    
+    func testFilter_Watched() throws {
+        listViewModel?.personalizedMovies = service.getMoviesFromText(response: service.responseMore) ?? []
+        listViewModel?.viewState = .watched
+        let filteredMovies = listViewModel?.filterMovies()
+        XCTAssert(filteredMovies?.count == 1)
+    }
 }
 
 class MockService: ServiceProtocol {
@@ -357,8 +378,18 @@ class MockService: ServiceProtocol {
             let movies = try JSONDecoder().decode(Ghibli.self, from: jsonData)
             var personalizedMovies = [PersonalizedMovie]()
             
+            var state = MovieState.none
+            
             for movie in movies {
-                let personalizedMovie = PersonalizedMovie(ghibliMovie: movie, state: .none)
+                if movie.title == "The Red Turtle" {
+                    state = .watched
+                } else if movie.title == "Grave of the Fireflies" || movie.title == "Earwig and the Witch" {
+                    state = .toWatch
+                }
+                
+                let personalizedMovie = PersonalizedMovie(
+                    ghibliMovie: movie,
+                    state: state)
                 personalizedMovies.append(personalizedMovie)
             }
             

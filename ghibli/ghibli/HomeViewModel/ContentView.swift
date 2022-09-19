@@ -14,7 +14,8 @@ struct ContentView: View {
         service: Service(), state: .all
     )
     
-    private var viewState = ViewState.all
+    @State var toWatch = false
+    @State var watched = false
     
     init() {
         viewModel.getData(urlString: "https://ghibliapi.herokuapp.com/films")
@@ -29,10 +30,10 @@ struct ContentView: View {
                 
                 HStack {
                     Text("All").onTapGesture {
-                        viewModel.reloadView(state: .all)
+                        viewModel.viewState = .all
                     }
                      Text("To Watch").onTapGesture {
-                         viewModel.reloadView(state: .toWatch)
+                         viewModel.viewState = .toWatch
                      }
                      Text("Watched").onTapGesture {
                          print("action 3 tapped")
@@ -40,11 +41,18 @@ struct ContentView: View {
                 }
                 
                 ForEach(0..<self.viewModel.scrollableMovies.count, id: \.self) { index in
-                    let movie = self.viewModel.scrollableMovies[index]
-                    GhibliCellContent(movie: movie, index: index)
+                    var movie = self.viewModel.scrollableMovies[index]
+//                    GhibliCellContent(index: index, movie: $movie)
+//                    GhibliCellContent(movie: $movie)
+                    GhibliCellContent(movie: movie, toWatch: $toWatch, watched: $watched)
+//                    if toWatch {
+//                        movie.state = .toWatch
+//                    } else if watched {
+//                        movie.state = .watched
+//                    }
                 }
                 
-                if self.viewModel.hasMoreItems() {
+                if self.viewModel.hasMoreItems {
                     Text("Fetching more...")
                         .onAppear(perform: {
                             self.viewModel.fetchMore()
@@ -57,19 +65,26 @@ struct ContentView: View {
 }
 
 struct GhibliCellContent: View {
+    var movie: PersonalizedMovie
+//    var index: Int = 0
+    @Binding var toWatch: Bool
+    @Binding var watched: Bool
     
-    var movie: PersonalizedMovie?
-    var index: Int = 0
-    
-    init(movie: PersonalizedMovie, index: Int) {
-        self.movie = movie
-        self.index = index
-    }
+//    init(index: Int) {
+//        self.movie = movie
+//        self.index = index
+//    }
     
     var body: some View {
-        if let movie = movie {
+//        if var movie = movie {
             let ghibliMovie = movie.ghibliMovie
-            NavigationLink(destination: MovieView(movie: movie)) {
+            
+            let movieView = MovieView(
+                toWatch: $toWatch,
+                watched: $watched
+            )
+                
+            NavigationLink(destination: movieView) {
                 VStack {
                     HStack {
                         Text("\(ghibliMovie.title)")
@@ -110,7 +125,7 @@ struct GhibliCellContent: View {
                     )
             }
         }
-    }
+//    }
 }
 
 struct ContentView_Previews: PreviewProvider {

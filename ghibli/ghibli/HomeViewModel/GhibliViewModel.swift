@@ -19,13 +19,29 @@ enum ViewState {
 
 class GhibliListViewModel: ObservableObject {
     @Published var scrollableMovies = [PersonalizedMovie]()
-    var viewState = ViewState.all
+    var viewState: ViewState? {
+        didSet {
+            min = 0
+            currentPage = 1
+            scrollableMovies = []
+            fetchMore()
+        }
+    }
+    
+    var hasMoreItems : Bool {
+        if !self.scrollableMovies.isEmpty {
+            self.currentPage += 1
+        }
+        return min < filteredMovies.count
+    }
+    
     var personalizedMovies = [PersonalizedMovie]()
     let movieLimitPerPage = 3
     private var currentPage = 1
     private var min = 0
     private var ghibliCancellable: AnyCancellable?
     private var service: ServiceProtocol?
+    private var filteredMovies = [PersonalizedMovie]()
     
     init(service: ServiceProtocol, state: ViewState) {
         self.service = service
@@ -43,28 +59,10 @@ class GhibliListViewModel: ObservableObject {
         )
     }
     
-    func setPersonalizedData(movies: Ghibli) {
-        for movie in movies {
-            let personalizedMovie = PersonalizedMovie(
-                ghibliMovie: movie,
-                state: movie.title == "Arrietty" ? .toWatch : .none
-            )
-            personalizedMovies.append(personalizedMovie)
-        }
-    }
-    
-    func reloadView(state: ViewState) {
-        min = 0
-        currentPage = 1
-        scrollableMovies = []
-        viewState = state
-        fetchMore()
-    }
-    
     func fetchMore() {
         if !personalizedMovies.isEmpty {
             let max = currentPage * movieLimitPerPage
-            let filteredMovies = filterMovies()
+            filteredMovies = filterMovies()
             
             if filteredMovies.count <= movieLimitPerPage || (max > filteredMovies.count && min < max) {
                 for index in min..<filteredMovies.count {
@@ -79,14 +77,7 @@ class GhibliListViewModel: ObservableObject {
         }
     }
     
-    func hasMoreItems() -> Bool {
-        if !self.scrollableMovies.isEmpty {
-            self.currentPage += 1
-        }
-        return min < filterMovies().count
-    }
-    
-    private func filterMovies() -> [PersonalizedMovie] {
+    func filterMovies() -> [PersonalizedMovie] {
         switch viewState {
         case .all:
             return personalizedMovies
@@ -94,6 +85,20 @@ class GhibliListViewModel: ObservableObject {
             return personalizedMovies.filter{ $0.state == .toWatch }
         case .watched:
             return personalizedMovies.filter{ $0.state == .watched }
+        case .none:
+            return [PersonalizedMovie]()
+        }
+    }
+}
+
+private extension GhibliListViewModel {
+    private func setPersonalizedData(movies: Ghibli) {
+        for movie in movies {
+            let personalizedMovie = PersonalizedMovie(
+                ghibliMovie: movie,
+                state: .none
+            )
+            personalizedMovies.append(personalizedMovie)
         }
     }
 }
