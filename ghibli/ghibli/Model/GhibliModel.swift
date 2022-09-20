@@ -40,7 +40,12 @@ struct GhibliElement: Codable {
 
 typealias Ghibli = [GhibliElement]
 
-struct PersonalizedMovie {
+class PersonalizedMovie {
     let ghibliMovie: GhibliElement
     var state: MovieState
+    
+    init(movie: GhibliElement, state: MovieState) {
+        self.ghibliMovie = movie
+        self.state = state
+    }
 }

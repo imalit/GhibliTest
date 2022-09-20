@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct MovieView: View {
-//    @ObservedObject private var viewModel: MovieViewModel
-//    var movie: PersonalizedMovie
-    @Binding var toWatch: Bool
-    @Binding var watched: Bool
+    @State var movie: PersonalizedMovie
 
     var body: some View {
         VStack {
-//            Text("\(movie.ghibliMovie.title)")
-            Toggle("to watch", isOn: $toWatch)
-            Toggle("watched", isOn: $watched)
+            Text("\(movie.ghibliMovie.title)")
+            Picker("state:",
+                   selection: $movie.state) {
+                    Text("None").tag(MovieState.none)
+                    Text("To Watch").tag(MovieState.toWatch)
+                    Text("Watched").tag(MovieState.watched)
+            }
+                   .pickerStyle(.automatic)
         }
     }
 }

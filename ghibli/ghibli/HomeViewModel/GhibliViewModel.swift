@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-enum MovieState {
+enum MovieState: Equatable {
     case watched, toWatch, none
 }
 
@@ -77,6 +77,13 @@ class GhibliListViewModel: ObservableObject {
         }
     }
     
+    func refreshView() {
+        min = 0
+        currentPage = 1
+        scrollableMovies = []
+        fetchMore()
+    }
+    
     func filterMovies() -> [PersonalizedMovie] {
         switch viewState {
         case .all:
@@ -95,7 +102,7 @@ private extension GhibliListViewModel {
     private func setPersonalizedData(movies: Ghibli) {
         for movie in movies {
             let personalizedMovie = PersonalizedMovie(
-                ghibliMovie: movie,
+                movie: movie,
                 state: .none
             )
             personalizedMovies.append(personalizedMovie)
