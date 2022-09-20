@@ -388,7 +388,7 @@ class MockService: ServiceProtocol {
                 }
                 
                 let personalizedMovie = PersonalizedMovie(
-                    ghibliMovie: movie,
+                    movie: movie,
                     state: state)
                 personalizedMovies.append(personalizedMovie)
             }
