@@ -13,6 +13,16 @@ struct MovieView: View {
     var body: some View {
         VStack {
             Text("\(movie.ghibliMovie.title)")
+                .font(.largeTitle)
+                .padding(
+                    EdgeInsets(
+                        top: 0,
+                        leading: 10,
+                        bottom: 10,
+                        trailing: 10
+                    )
+                )
+            
             Picker("state:",
                    selection: $movie.state) {
                     Text("None").tag(MovieState.none)
@@ -20,12 +30,29 @@ struct MovieView: View {
                     Text("Watched").tag(MovieState.watched)
             }
                    .pickerStyle(.automatic)
-        }
+            
+            AsyncImage(
+                url: URL(string: movie.ghibliMovie.image),
+                content: { image in
+                    image.resizable()
+                }, placeholder: {
+                    Color.red
+                }
+            )
+                .scaledToFit()
+                .cornerRadius(10)
+            
+            Text("\(movie.ghibliMovie.ghibliDescription)")
+                .multilineTextAlignment(.leading)
+                .lineLimit(nil)
+        }.padding(
+            EdgeInsets(
+                top: 10,
+                leading: 10,
+                bottom: 20,
+                trailing: 10
+            )
+        )
+            .navigationBarTitle("", displayMode: .inline)
     }
 }
-
-//struct MovieView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        MovieView()
-//    }
-//}
