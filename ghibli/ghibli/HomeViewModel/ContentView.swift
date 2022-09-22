@@ -10,14 +10,10 @@ import Combine
 
 struct ContentView: View {
     
-    @ObservedObject private var viewModel = GhibliListViewModel(
+    @StateObject private var viewModel = GhibliListViewModel(
         service: Service(), state: .all
     )
-    
-    init() {
-        viewModel.getData(urlString: "https://ghibliapi.herokuapp.com/films")
-    }
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -52,6 +48,9 @@ struct ContentView: View {
                     )
                 }
             }
+        }
+        .onAppear {
+            viewModel.getData(urlString: "https://ghibliapi.herokuapp.com/films")
         }
     }
 }
