@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E007DC6028D4BC5F00E67E1E /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E007DC5F28D4BC5F00E67E1E /* MovieView.swift */; };
-		E02D2FB128D8C633000667BA /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02D2FB028D8C633000667BA /* MovieViewModel.swift */; };
 		E0DD5ED928CF813B00B41243 /* ghibliApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DD5ED828CF813B00B41243 /* ghibliApp.swift */; };
 		E0DD5EDB28CF813B00B41243 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DD5EDA28CF813B00B41243 /* ContentView.swift */; };
 		E0DD5EDD28CF813E00B41243 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E0DD5EDC28CF813E00B41243 /* Assets.xcassets */; };
@@ -40,7 +39,6 @@
 
 /* Begin PBXFileReference section */
 		E007DC5F28D4BC5F00E67E1E /* MovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieView.swift; sourceTree = "<group>"; };
-		E02D2FB028D8C633000667BA /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		E0DD5ED528CF813B00B41243 /* ghibli.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ghibli.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0DD5ED828CF813B00B41243 /* ghibliApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ghibliApp.swift; sourceTree = "<group>"; };
 		E0DD5EDA28CF813B00B41243 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -95,7 +93,6 @@
 			isa = PBXGroup;
 			children = (
 				E007DC5F28D4BC5F00E67E1E /* MovieView.swift */,
-				E02D2FB028D8C633000667BA /* MovieViewModel.swift */,
 			);
 			path = MovieViewModel;
 			sourceTree = "<group>";
@@ -301,7 +298,6 @@
 				E007DC6028D4BC5F00E67E1E /* MovieView.swift in Sources */,
 				E0DD5F0328CF81AF00B41243 /* GhibliModel.swift in Sources */,
 				E0DD5F0728CF8B2700B41243 /* GhibliService.swift in Sources */,
-				E02D2FB128D8C633000667BA /* MovieViewModel.swift in Sources */,
 				E0DD5F0528CF83BF00B41243 /* GhibliViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -21,10 +21,7 @@ class GhibliListViewModel: ObservableObject {
     @Published var scrollableMovies = [PersonalizedMovie]()
     var viewState: ViewState? {
         didSet {
-            min = 0
-            currentPage = 1
-            scrollableMovies = []
-            fetchMore()
+            refreshView()
         }
     }
     
